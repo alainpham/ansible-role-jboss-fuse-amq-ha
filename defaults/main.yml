@@ -1,0 +1,56 @@
+---
+########################################################
+#This lists all used variables with their sane defaults
+
+
+####################################
+#### Generic variables
+####################################
+#path to the Fuse or A-MQ package
+src_package_path: ./distrib/
+
+#temporary folder on target host to unzip the package
+temp_folder: /home/user/tmp/
+
+#Fuse or A-MQ package to be installed with version
+artifact: jboss-fuse-karaf-6.3.0.redhat-187.zip
+
+#folder on target host 
+target_package_folder: /home/user/fuse
+
+karaf_ssh_port: 8101
+karaf_http_port: 8181
+rmi_server_port: 44444
+rmi_registry_port: 1099
+
+#setup default users
+users: 
+  - 
+    password: admin
+    roles: 
+      - admin
+    username: admin
+  - 
+    password: guest
+    roles: 
+      - viewer
+    username: guest
+
+####################################
+#### A-MQ variables
+####################################
+
+#flag to choose whether to setup a network of A-MQ brokers
+setup_amq_network: no
+
+#########The following variables shoud be redefined in host_vars
+amq_broker_name: amq
+amq_openwire_port: 61616
+amq_data_store_folder: ${karaf.data}/amq
+#this is an example of the list of target brokers
+networked_hosts:
+  -  connect_to_host: amq-b
+     master: amq-b-master
+     slave: amq-b-slave
+
+

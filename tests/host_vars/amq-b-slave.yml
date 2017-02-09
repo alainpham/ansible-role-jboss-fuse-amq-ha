@@ -1,0 +1,16 @@
+temp_folder: /home/user/tmpb/
+target_package_folder : /home/user/amq-b-slave
+
+karaf_ssh_port: 8102
+karaf_http_port: 8182
+rmi_server_port: 44445
+rmi_registry_port: 1098
+
+amq_broker_name: amq-b-slave
+amq_openwire_port: 61615
+amq_data_store_folder: /nfs/amq-b-store
+
+networked_hosts:
+  -  connect_to_host: amq-a
+     master: amq-a-master
+     slave: amq-a-slave

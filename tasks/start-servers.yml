@@ -1,0 +1,16 @@
+---
+- name: Fail if package not installed
+  fail: 
+    msg: Failed because package not installed
+  when: not_installed
+
+- name: Start Fuse container
+  shell: "nohup {{target_package_folder}}/bin/standalone >/dev/null 2>&1 &"
+  when: installed
+
+- name: Check if server is up
+  shell: "{{target_package_folder}}/bin/status"
+  register: svrstatus
+  until: svrstatus.stdout_lines | last == "Running ..."
+  retries: 4
+  delay: 5

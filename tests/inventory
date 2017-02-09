@@ -1,0 +1,9 @@
+[fuse]
+fuse-a-active ansible_host=172.17.0.2 ansible_connection=ssh ansible_user=user ansible_ssh_pass=user
+fuse-b-active ansible_host=172.17.0.3 ansible_connection=ssh ansible_user=user ansible_ssh_pass=user
+
+[amq]
+amq-a-master ansible_host=172.17.0.4 ansible_connection=ssh ansible_user=user ansible_ssh_pass=user
+amq-a-slave ansible_host=172.17.0.5 ansible_connection=ssh ansible_user=user ansible_ssh_pass=user
+amq-b-master ansible_host=172.17.0.5 ansible_connection=ssh ansible_user=user ansible_ssh_pass=user
+amq-b-slave ansible_host=172.17.0.4 ansible_connection=ssh ansible_user=user ansible_ssh_pass=user

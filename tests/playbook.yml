@@ -1,0 +1,34 @@
+---
+
+- name: Fuse install
+  hosts: fuse
+  roles:
+  - ansible-role-jboss-fuse-amq-ha
+
+- name: A-MQ install
+  hosts: amq
+  roles:
+  - ansible-role-jboss-fuse-amq-ha
+
+- name: Start Fuse and A-MQ main instances
+  hosts: fuse amq-a-master amq-b-master
+  tasks:
+  - name: start-servers
+    include_role:
+      name: ansible-role-jboss-fuse-amq-ha
+      tasks_from: start-servers
+
+- name: Start A-MQ slaves
+  hosts: amq-a-slave amq-b-slave
+  tasks:
+  - name: start-servers
+    include_role:
+      name: ansible-role-jboss-fuse-amq-ha
+      tasks_from: start-servers
+
+- name: Show admin urls
+  hosts: all
+  tasks:
+  - name: Show urls
+    debug:
+      msg: "http://{{ansible_ssh_host}}:{{karaf_http_port}}/hawtio"

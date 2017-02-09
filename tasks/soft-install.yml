@@ -1,0 +1,35 @@
+---
+- name: Remove temp folder
+  file: 
+    path: "{{ temp_folder }}"
+    state: absent
+    
+- name: Create temp folder
+  file: 
+    path: "{{ temp_folder }}"
+    state: directory
+
+- name: Unzip package in temp folder
+  unarchive:
+    src: "{{ src_package_path + artifact}}"
+    dest: "{{ temp_folder}}"
+  when: not_installed
+
+- name: Get package original foldername
+  shell: "ls -d {{temp_folder}}/*"
+  register: dir_name
+  when: not_installed
+ 
+- name: Rename package folder
+  shell: "mv {{dir_name.stdout_lines | first}} {{target_package_folder}}"
+  when: not_installed
+
+- name: Set facts to installed
+  set_fact: 
+    not_installed: false
+    installed: true
+
+- name: Remove temp folder
+  file: 
+    path: "{{ temp_folder }}"
+    state: absent

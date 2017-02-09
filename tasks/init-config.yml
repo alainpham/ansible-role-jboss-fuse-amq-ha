@@ -1,0 +1,115 @@
+---
+- name: Create Default Users
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/users.properties"
+    regexp: "^(#?){{ item.username }}=(.*)$"
+    line: "{{ item.username ~ '=' ~ item.password ~ ',' ~ item.roles|join(',')}}"
+    insertbefore: EOF
+  with_items: "{{users}}"
+
+- name: Set Karaf SSH port
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/org.apache.karaf.shell.cfg"
+    regexp: "^(.*)sshPort(.*)$"
+    line: "sshPort = {{karaf_ssh_port}}"
+
+- name: Set Karaf HTTP port
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/{{item}}"
+    regexp: "^(.*)org.osgi.service.http.port(.*)$"
+    line: "org.osgi.service.http.port={{karaf_http_port}}"
+  with_items: ["org.ops4j.pax.web.cfg","system.properties"]
+- name: Set Karaf rmiRegistryPort
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/org.apache.karaf.management.cfg"
+    regexp: "^(.*)rmiRegistryPort(.*)$"
+    line: "rmiRegistryPort={{rmi_registry_port}}"
+
+- name: Set Karaf rmiServerPort
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/org.apache.karaf.management.cfg"
+    regexp: "^(.*)rmiServerPort(.*)$"
+    line: "rmiServerPort={{rmi_server_port}}"
+
+- name: Add brokerID to activemq.xml 
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<broker.*>(.*)$"
+    line: "<broker xmlns=\"http://activemq.apache.org/schema/core\" brokerName=\"${broker-name}\" brokerId=\"${broker-name}\" dataDirectory=\"${data}\" start=\"false\" restartAllowed=\"false\">"
+
+- name: Set brokerID
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/io.fabric8.mq.fabric.server-broker.cfg"
+    regexp: "^(.*)broker-name(.*)$"
+    line: "broker-name={{amq_broker_name}}"
+
+- name: Set amq data folder
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/io.fabric8.mq.fabric.server-broker.cfg"
+    regexp: "^(.*)data.*=(.*)$"
+    line: "data={{amq_data_store_folder}}"
+
+
+- name: Set broker port
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/system.properties"
+    regexp: "^(.*)activemq.port.*=(.*)$"
+    line: "activemq.port = {{amq_openwire_port}}"
+
+- name: Remove all non openwire protocols
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<transportConnector.*name=\"{{item}}\".*>(.*)$"
+    state: absent
+  with_items: ["amqp","mqtt","ws"]
+
+- name: Open network connectors block
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<networkConnectors.*>(.*)$"
+    insertbefore: "^.*<transportConnectors>.*$"
+    line: "<networkConnectors>"
+  when: setup_amq_network
+
+- name: Close network connectors block
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)</networkConnectors.*>(.*)$"
+    insertafter: "^(.*)<networkConnectors.*>(.*)$"
+    line: "</networkConnectors>"
+  when: setup_amq_network
+
+- name: Add network connectors to each neighbor
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<networkConnector.*{{item.connect_to_host}}.*>(.*)$"
+    insertbefore: "^.*</networkConnectors>.*$"
+    line: "<networkConnector name=\"linkTo{{item.connect_to_host}}\" uri=\"masterslave:(tcp://{{hostvars[item.master].ansible_host}}:{{hostvars[item.master].amq_openwire_port}},tcp://{{hostvars[item.slave].ansible_host}}:{{hostvars[item.slave].amq_openwire_port}})\" networkTTL=\"-1\" userName=\"{{hostvars[item.master].users[0].username}}\" password=\"{{hostvars[item.master].users[0].password}}\" suppressDuplicateQueueSubscriptions=\"true\" decreaseNetworkConsumerPriority=\"true\"/>"
+  with_items: "{{networked_hosts}}"
+  when: setup_amq_network
+
+- name: Add replay policy when no consumers
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)</networkConnectors.*>(.*)$"
+    insertafter: "^(.*)<networkConnectors.*>(.*)$"
+    line: "</networkConnectors>"
+  when: setup_amq_network
+
+- name: Allow replay policy to avoid stuck messages
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)</networkBridgeFilterFactory.*>(.*)$"
+    insertafter: "^(.*)<policyEntry.*queue=\">\".*>(.*)$"
+    line: "<networkBridgeFilterFactory><conditionalNetworkBridgeFilterFactory replayWhenNoConsumers=\"true\" replayDelay=\"1000\"/></networkBridgeFilterFactory>"
+  when: setup_amq_network
+  
+- name: Setup update cluster clients
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<transportConnector.*name=\"openwire\".*>(.*)$"
+    insertafter: "^(.*)<transportConnectors.*>(.*)$"
+    line: "<transportConnector name=\"openwire\" uri=\"tcp://0.0.0.0:0?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600\" updateClusterClients=\"true\" rebalanceClusterClients=\"true\" updateClusterClientsOnRemove=\"true\" updateClusterFilter=\"amq.*\"/>"
+  when: setup_amq_network
+
+

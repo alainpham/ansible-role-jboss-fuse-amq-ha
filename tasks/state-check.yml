@@ -1,0 +1,10 @@
+---
+- name: Check if package folder is there
+  stat:
+    path: "{{target_package_folder}}/etc/users.properties"
+  register: packagefld
+
+- name: Set fact about package install status
+  set_fact: 
+    not_installed: packagefld.stat.exists == false
+    installed: packagefld.stat.exists == true

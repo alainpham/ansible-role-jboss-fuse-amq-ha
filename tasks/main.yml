@@ -1,0 +1,4 @@
+---
+- include: "state-check.yml"
+- include: "soft-install.yml"  
+- include: "init-config.yml"
