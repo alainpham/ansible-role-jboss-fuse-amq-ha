@@ -10,7 +10,7 @@ It allows to
  - load balancing among active nodes
  - start small with the possibility to scale up indefinitely when needed
 
-![overview](https://raw.githubusercontent.com/alainpham/ansible-role-jboss-fuse-amq-ha/master/minimal-fuse-amq-ha.png)
+![overview](https://raw.githubusercontent.com/alainpham/ansible-role-jboss-fuse-amq-ha/master/meta/minimal-fuse-amq-ha.png)
 
 The example playbook in the test folder shows how to use this role to setup the following minimal Highly Available Fuse/AMQ cluster:
 - 2 machines with Active JBoss Fuse installed 
