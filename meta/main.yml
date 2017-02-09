@@ -2,6 +2,7 @@ galaxy_info:
   author: Alain Pham
   description: "Install and start JBoss Fuse and Active-MQ in a High Availability configuration"
   company:
+  license: license (Apache)
   min_ansible_version: 2.2
 
   platforms:
@@ -15,7 +16,6 @@ galaxy_info:
     - java
     - fuse
     - activemq
-    - a-mq
     - amq
     - ha
 
