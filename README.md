@@ -1,6 +1,9 @@
 Ansible role for JBoss Fuse/A-MQ with minimal high availability install and configuration
 =========
 
+Supporting blog article : 
+https://alainpham.github.io/posts/ansible-automation-for-highly-available-jboss-fuse-amq-integration-platform/
+
 What this ansible role does
 ------------
 This ansible role allows to quickly install, configure and start a small Integration Platform with JBoss Fuse and Active-MQ.
