@@ -31,4 +31,4 @@
   tasks:
   - name: Show urls
     debug:
-      msg: "http://{{ansible_ssh_host}}:{{karaf_http_port}}/hawtio"
+      msg: "http://{{ansible_ssh_host}}:{{http_port}}/hawtio"

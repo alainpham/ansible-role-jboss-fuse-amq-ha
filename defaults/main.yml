@@ -25,7 +25,7 @@ target_package_folder: "~/fuse"
 setup_karaf: yes
 
 karaf_ssh_port: 8101
-karaf_http_port: 8181
+http_port: 8181
 rmi_server_port: 44444
 rmi_registry_port: 1099
 
@@ -64,21 +64,24 @@ karaf_features:
   - activemq-camel
 
 ####################################
-#### A-MQ 6 variables
+#### AMQ 6 & 7 variables
 ####################################
 
 #flag to choose whether to setup A-MQ 6 brokers
 setup_amq: no
 
-#flag to choose whether to setup a network of A-MQ 6 brokers
+#flag to choose whether to setup a network of AMQ brokers
 setup_amq_network: no
 
 #########The following variables shoud be redefined in host_vars
 amq_broker_name: amq
-amq_openwire_port: 61616
-amq_data_store_folder: ${karaf.data}/amq
+amq_port: 61616
+amq_data_store_folder: ~/amqdata
 #this is an example of the list of target brokers
 networked_hosts:
   -  connect_to_host: amq-b
      master: amq-b-master
      slave: amq-b-slave
+
+# AMQ 7 artemis specific vars
+setup_artemis : no

@@ -21,7 +21,7 @@
   lineinfile: 
     dest: "{{target_package_folder}}/etc/system.properties"
     regexp: "^(.*)activemq.port.*=(.*)$"
-    line: "activemq.port = {{amq_openwire_port}}"
+    line: "activemq.port = {{amq_port}}"
 
 - name: Remove all non openwire protocols
   lineinfile: 

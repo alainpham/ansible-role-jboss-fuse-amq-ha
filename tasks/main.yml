@@ -20,3 +20,5 @@
   when: setup_karaf
 
 # Artemis Based components
+- include: "init-config-artemis.yml"
+  when: setup_artemis

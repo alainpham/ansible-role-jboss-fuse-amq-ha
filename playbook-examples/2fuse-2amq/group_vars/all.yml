@@ -18,7 +18,7 @@ artifact: jboss-fuse-karaf-6.3.0.redhat-187.zip
 target_package_folder: /home/user/fuse
 
 karaf_ssh_port: 8101
-karaf_http_port: 8181
+http_port: 8181
 rmi_server_port: 44444
 rmi_registry_port: 1099
 

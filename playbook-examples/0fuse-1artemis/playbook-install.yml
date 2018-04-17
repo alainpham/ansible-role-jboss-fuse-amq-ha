@@ -1,0 +1,7 @@
+---
+
+- name: Fuse install
+  hosts: fuse
+  roles:
+  - ansible-role-jboss-fuse-amq-ha
+  

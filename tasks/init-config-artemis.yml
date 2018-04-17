@@ -1,0 +1,22 @@
+---
+- name: Creating broker
+  shell: |
+    ./artemis create \
+      --silent Y \
+      --name {{ amq_broker_name }} \
+      --user {{ users.admin.username }} \
+      --password {{ users.admin.password }} \
+      --allow-anonymous Y \
+      --no-amqp-acceptor \
+      --no-hornetq-acceptor \
+      --no-mqtt-acceptor \
+      --no-stomp-acceptor \
+      --host 0.0.0.0 \
+      --http-host {{ansible_ssh_host}} \
+      --http-port {{ http_port }} \
+      --default-port {{amq_port}} \
+      --data {{amq_data_store_folder}} \
+      ./../instances/{{ amq_broker_name }}
+  args:
+    chdir: "{{ target_package_folder }}/bin"
+    creates: ./../instances/{{ amq_broker_name }}

@@ -4,7 +4,7 @@
 
 - name: Check if server is up
   uri:
-    url: "http://{{ansible_ssh_host}}:{{karaf_http_port}}/hawtio/jolokia/read/org.apache.karaf:type=system,name=root/StartLevel"
+    url: "http://{{ansible_ssh_host}}:{{http_port}}/hawtio/jolokia/read/org.apache.karaf:type=system,name=root/StartLevel"
     method: GET
     user: "{{ users.admin.username }}"
     password: "{{ users.admin.password }}"
