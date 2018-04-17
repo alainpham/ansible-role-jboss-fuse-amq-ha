@@ -1,4 +1,22 @@
 ---
+- include: "prepare-host.yml"
+  when: prepare_host
+
 - include: "state-check.yml"
 - include: "soft-install.yml"  
-- include: "init-config.yml"
+
+# Karaf based components
+- include: "init-config-karaf.yml"
+  when: setup_karaf
+- include: "init-config-karaf-amq.yml"
+  when: setup_karaf and setup_amq
+- include: "init-config-karaf-amq-nob.yml"
+  when: setup_karaf and setup_amq and setup_amq_network
+
+- include: "start-server-karaf.yml"
+  when: setup_karaf
+
+- include: "install-features-karaf.yml"
+  when: setup_karaf
+
+# Artemis Based components

@@ -1,0 +1,4 @@
+---
+- name: Install features
+  shell: "{{karaf_client}} 'features:install {{ item }}'"
+  with_items: '{{ karaf_features }}'

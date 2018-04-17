@@ -1,0 +1,2 @@
+[fuse]
+rhel ansible_connection=ssh ansible_user=cloud-user

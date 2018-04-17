@@ -1,0 +1,16 @@
+---
+- name: Start Fuse container
+  shell: "nohup {{target_package_folder}}/bin/start >/dev/null 2>&1 &"
+
+- name: Check if server is up
+  uri:
+    url: "http://{{ansible_ssh_host}}:{{karaf_http_port}}/hawtio/jolokia/read/org.apache.karaf:type=system,name=root/StartLevel"
+    method: GET
+    user: "{{ users.admin.username }}"
+    password: "{{ users.admin.password }}"
+    force_basic_auth: yes
+    status_code: 200
+    register: result
+    until: result.status == 200
+    retries: 60
+    delay: 1

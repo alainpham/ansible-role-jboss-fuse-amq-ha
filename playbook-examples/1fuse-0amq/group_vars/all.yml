@@ -73,12 +73,3 @@ setup_amq: no
 #flag to choose whether to setup a network of A-MQ 6 brokers
 setup_amq_network: no
 
-#########The following variables shoud be redefined in host_vars
-amq_broker_name: amq
-amq_openwire_port: 61616
-amq_data_store_folder: ${karaf.data}/amq
-#this is an example of the list of target brokers
-networked_hosts:
-  -  connect_to_host: amq-b
-     master: amq-b-master
-     slave: amq-b-slave

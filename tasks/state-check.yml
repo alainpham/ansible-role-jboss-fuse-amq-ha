@@ -1,7 +1,7 @@
 ---
 - name: Check if package folder is there
   stat:
-    path: "{{target_package_folder}}/etc/users.properties"
+    path: "{{target_package_folder}}/bin"
   register: packagefld
 
 - name: Set fact about package install status

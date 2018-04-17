@@ -1,0 +1,15 @@
+---
+- name: Start Fuse instance
+  hosts: fuse
+  tasks:
+  - name: start-servers
+    include_role:
+      name: ansible-role-jboss-fuse-amq-ha
+      tasks_from: start-servers
+
+- name: Show admin urls
+  hosts: all
+  tasks:
+  - name: Show urls
+    debug:
+      msg: "http://{{ansible_ssh_host}}:{{karaf_http_port}}/hawtio"

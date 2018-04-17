@@ -1,0 +1,43 @@
+---
+- name: Open network connectors block
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<networkConnectors.*>(.*)$"
+    insertbefore: "^.*<transportConnectors>.*$"
+    line: "<networkConnectors>"
+  
+- name: Close network connectors block
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)</networkConnectors.*>(.*)$"
+    insertafter: "^(.*)<networkConnectors.*>(.*)$"
+    line: "</networkConnectors>"
+
+- name: Add network connectors to each neighbor
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<networkConnector.*{{item.connect_to_host}}.*>(.*)$"
+    insertbefore: "^.*</networkConnectors>.*$"
+    line: "<networkConnector name=\"linkTo{{item.connect_to_host}}\" uri=\"masterslave:(tcp://{{hostvars[item.master].ansible_host}}:{{hostvars[item.master].amq_openwire_port}},tcp://{{hostvars[item.slave].ansible_host}}:{{hostvars[item.slave].amq_openwire_port}})\" networkTTL=\"-1\" userName=\"{{hostvars[item.master].users[0].username}}\" password=\"{{hostvars[item.master].users[0].password}}\" suppressDuplicateQueueSubscriptions=\"true\" decreaseNetworkConsumerPriority=\"true\"/>"
+  with_items: "{{networked_hosts}}"
+
+- name: Add replay policy when no consumers
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)</networkConnectors.*>(.*)$"
+    insertafter: "^(.*)<networkConnectors.*>(.*)$"
+    line: "</networkConnectors>"
+
+- name: Allow replay policy to avoid stuck messages
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)</networkBridgeFilterFactory.*>(.*)$"
+    insertafter: "^(.*)<policyEntry.*queue=\">\".*>(.*)$"
+    line: "<networkBridgeFilterFactory><conditionalNetworkBridgeFilterFactory replayWhenNoConsumers=\"true\" replayDelay=\"1000\"/></networkBridgeFilterFactory>"
+  
+- name: Setup update cluster clients
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<transportConnector.*name=\"openwire\".*>(.*)$"
+    insertafter: "^(.*)<transportConnectors.*>(.*)$"
+    line: "<transportConnector name=\"openwire\" uri=\"tcp://0.0.0.0:0?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600\" updateClusterClients=\"true\" rebalanceClusterClients=\"true\" updateClusterClientsOnRemove=\"true\" updateClusterFilter=\"amq.*\"/>"

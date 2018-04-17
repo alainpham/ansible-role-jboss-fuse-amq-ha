@@ -1,0 +1,31 @@
+---
+- name: Add brokerID to activemq.xml 
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<broker.*>(.*)$"
+    line: "<broker xmlns=\"http://activemq.apache.org/schema/core\" brokerName=\"${broker-name}\" brokerId=\"${broker-name}\" dataDirectory=\"${data}\" start=\"false\" restartAllowed=\"false\">"
+
+- name: Set brokerID
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/io.fabric8.mq.fabric.server-broker.cfg"
+    regexp: "^(.*)broker-name(.*)$"
+    line: "broker-name={{amq_broker_name}}"
+
+- name: Set amq data folder
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/io.fabric8.mq.fabric.server-broker.cfg"
+    regexp: "^(.*)data.*=(.*)$"
+    line: "data={{amq_data_store_folder}}"
+
+- name: Set broker port
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/system.properties"
+    regexp: "^(.*)activemq.port.*=(.*)$"
+    line: "activemq.port = {{amq_openwire_port}}"
+
+- name: Remove all non openwire protocols
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/activemq.xml"
+    regexp: "^(.*)<transportConnector.*name=\"{{item}}\".*>(.*)$"
+    state: absent
+  with_items: ["amqp","mqtt","ws"]
