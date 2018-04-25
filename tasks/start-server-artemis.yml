@@ -1,10 +1,10 @@
 ---
 - name: Start Fuse container
-  shell: "nohup {{target_package_folder}}/bin/start >/dev/null 2>&1 &"
+  shell: "nohup {{target_package_folder}}/instances/{{amq_broker_name}}/bin/artemis run >/dev/null 2>&1 &"
 
 - name: Check if server is up
   uri:
-    url: "http://{{ansible_ssh_host}}:{{http_port}}/hawtio/jolokia/read/org.apache.karaf:type=system,name=root/StartLevel"
+    url: "http://{{ansible_ssh_host}}:{{http_port}}/console/jolokia/read/org.apache.activemq.artemis:broker=%22{{amq_broker_name}}%22/Started"
     method: GET
     user: "{{ users.admin.username }}"
     password: "{{ users.admin.password }}"
@@ -13,4 +13,4 @@
   register: result
   until: result.status == 200
   retries: 60
-  delay: 1
+  delay: 2

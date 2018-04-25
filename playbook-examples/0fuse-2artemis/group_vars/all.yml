@@ -7,11 +7,7 @@
 ####################################
 
 #flag to say whether to install essential packages on the host such as unzip or java. You could assume the hosts are already installed.
-prepare_host: no
-
-#NFS folder for shared store setup when prepare host is done
-nfs_server: "hostmachine:/nfs/"
-nfs_mount_path: "/home/cloud-user/nfs/"
+prepare_host: yes
 
 #path to the Fuse or A-MQ package
 src_package_path: ./../distrib/
@@ -20,18 +16,15 @@ src_package_path: ./../distrib/
 temp_folder: "~/tmp/"
 
 #Fuse or A-MQ package to be installed with version
-artifact: jboss-fuse-karaf-6.3.0.redhat-329.zip
+artifact: amq-broker-7.1.0-bin.zip
 
 #folder on target host 
-target_package_folder: "~/fuse"
+target_package_folder: "~/broker"
 
 #flag to set whether fuse-karaf server should be configured on the the host
-setup_karaf: yes
+setup_karaf: no
 
-karaf_ssh_port: 8101
 http_port: 8181
-rmi_server_port: 44444
-rmi_registry_port: 1099
 
 #setup default users
 users:
@@ -60,33 +53,15 @@ users:
     roles:
       - viewer
 
-karaf_client: '{{ target_package_folder }}/bin/client -r 3 -d 10 -u {{ users.admin.username }} -p {{ users.admin.password }}'
-
-# list of karaf features to be installed
-karaf_features:
-  - camel-amqp
-  - activemq-camel
-
 ####################################
 #### AMQ 6 & 7 variables
 ####################################
-
 
 #flag to choose whether to setup A-MQ 6 brokers
 setup_amq: no
 
 #flag to choose whether to setup a network of AMQ brokers
-setup_amq_network: no
-
-#########The following variables shoud be redefined in host_vars
-amq_broker_name: amq
-amq_port: 61616
-amq_data_store_folder: ~/amqdata
-#this is an example of the list of target brokers
-networked_hosts:
-  -  connect_to_host: amq-b
-     master: amq-b-master
-     slave: amq-b-slave
+setup_amq_network: yes
 
 # AMQ 7 artemis specific vars
-setup_artemis : no
+setup_artemis : yes

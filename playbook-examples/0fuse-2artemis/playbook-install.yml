@@ -1,0 +1,12 @@
+---
+
+- name: Masters install
+  hosts: masters
+  roles:
+  - ansible-role-jboss-fuse-amq-ha
+
+- name: Slaves install
+  hosts: slaves
+  roles:
+  - ansible-role-jboss-fuse-amq-ha
+  

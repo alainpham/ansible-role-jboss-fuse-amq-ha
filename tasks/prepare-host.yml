@@ -3,6 +3,24 @@
   yum:
     name: "{{ item }}"
     state: present
+  become: yes
   with_items:
     - unzip
     - java-1.8.0-openjdk
+
+- name: Create nfs folder
+  file: 
+    path: "{{ nfs_mount_path }}"
+    state: directory
+
+- name: Fstab for nfs mount 
+  lineinfile:
+    path: /etc/fstab
+    state: present
+    regexp: ".*{{nfs_server}}.*"
+    line: "{{nfs_server}} {{ nfs_mount_path }} nfs defaults 0 0"
+  become: yes
+
+- name: Mount nfs
+  shell: mount -a -t nfs
+  become: yes

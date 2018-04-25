@@ -1,2 +1,3 @@
-[fuse]
-rhel ansible_connection=ssh ansible_user=cloud-user
+[artemis]
+std1 ansible_connection=ssh ansible_user=cloud-user
+std2 ansible_connection=ssh ansible_user=cloud-user

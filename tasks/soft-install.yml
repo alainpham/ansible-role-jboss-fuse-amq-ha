@@ -8,6 +8,7 @@
   file: 
     path: "{{ temp_folder }}"
     state: directory
+  when: not_installed
 
 - name: Unzip package in temp folder
   unarchive:

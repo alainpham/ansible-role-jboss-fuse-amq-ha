@@ -1,0 +1,156 @@
+---
+# Connectors block
+- name: Open network connectors block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<connectors.*>(.*)$"
+    insertbefore: "^.*</core>.*$"
+    line: "<connectors>"
+  
+- name: Close network connectors block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)</connectors.*>(.*)$"
+    insertbefore: "^(.*)</core.*>(.*)$"
+    line: "</connectors>"
+
+# Cluster connections block
+- name: Open cluster-connections block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<cluster-connections>(.*)$"
+    insertbefore: "^.*</core>.*$"
+    line: "<cluster-connections>"
+  
+- name: Close cluster-connections connectors block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)</cluster-connections>(.*)$"
+    insertbefore: "^(.*)</core.*>(.*)$"
+    line: "</cluster-connections>"
+
+# Simple Cluster connection block
+- name: Open simple cluster-connection block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<cluster-connection.*name=\"artemis-cluster\">(.*)$"
+    insertbefore: "^.*</cluster-connections>.*$"
+    line: "<cluster-connection name=\"artemis-cluster\">"
+  
+- name: Close simple cluster-connection block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)</cluster-connection>(.*)$"
+    insertbefore: "^(.*)</cluster-connections>(.*)$"
+    line: "</cluster-connection>"
+
+# info in cluster connection block
+- name: Set connector-ref
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<connector-ref>{{ amq_broker_name }}-connector</connector-ref>(.*)$"
+    insertbefore: "^.*</cluster-connection>.*$"
+    line: "<connector-ref>{{ amq_broker_name }}-connector</connector-ref>"
+
+- name: Set retry-interval
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<retry-interval>(.*)$"
+    insertbefore: "^.*</cluster-connection>.*$"
+    line: "<retry-interval>500</retry-interval>"
+
+- name: Set use-duplicate-detection
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<use-duplicate-detection>(.*)$"
+    insertbefore: "^.*</cluster-connection>.*$"
+    line: "<use-duplicate-detection>true</use-duplicate-detection>"
+
+- name: Set message-load-balancing
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<message-load-balancing>(.*)$"
+    insertbefore: "^.*</cluster-connection>.*$"
+    line: "<message-load-balancing>ON_DEMAND</message-load-balancing>"
+
+- name: Set max-hops
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<max-hops>(.*)$"
+    insertbefore: "^.*</cluster-connection>.*$"
+    line: "<max-hops>1</max-hops>"
+
+
+# Static connectors refs static-connectors
+- name: Open simple static-connectors block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<static-connectors>(.*)$"
+    insertbefore: "^.*</cluster-connection>.*$"
+    line: "<static-connectors>"
+  
+- name: Close simple static-connectors block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)</static-connectors>(.*)$"
+    insertbefore: "^(.*)</cluster-connection>(.*)$"
+    line: "</static-connectors>"
+
+#Setup all connectors
+- debug: msg="host is {{ item }} {{ hostvars[item]['ansible_ssh_host'] }}"
+  with_inventory_hostnames:
+    - masters
+    - slaves
+
+
+- name: Set connector
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<connector.*name=.*{{ hostvars[item]['amq_broker_name'] }}(.*)$"
+    insertbefore: "^.*</connectors>.*$"
+    line: "<connector name=\"{{ hostvars[item]['amq_broker_name'] }}-connector\">tcp://{{ hostvars[item]['ansible_ssh_host'] }}:{{ hostvars[item]['amq_port'] }}</connector>"
+  with_inventory_hostnames:
+    - masters
+    - slaves
+
+
+- name: Set connector-ref
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<connector-ref>{{ hostvars[item]['amq_broker_name'] }}-connector</connector-ref>(.*)$"
+    insertbefore: "^.*</static-connectors>.*$"
+    line: "<connector-ref>{{ hostvars[item]['amq_broker_name'] }}-connector</connector-ref>"
+  with_inventory_hostnames:
+    - masters
+    - slaves
+
+#setting HA policy block
+- name: Open ha policy block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)<ha-policy><shared-store>(.*)$"
+    insertbefore: "^.*</core>.*$"
+    line: "<ha-policy><shared-store>"
+  
+- name: Close ha policy block
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^(.*)</shared-store></ha-policy>(.*)$"
+    insertbefore: "^(.*)</core.*>(.*)$"
+    line: "</shared-store></ha-policy>"
+
+- name: Set HA for masters
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^.*<master><failover-on-shutdown>true</failover-on-shutdown></master>.*$"
+    insertbefore: "^(.*)</shared-store></ha-policy>(.*)$"
+    line : "<master><failover-on-shutdown>true</failover-on-shutdown></master>"
+  when: '"master" in amq_broker_name'
+
+- name: Set HA for slaves
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^.*<slave><failover-on-shutdown>true</failover-on-shutdown><allow-failback>true</allow-failback></slave>.*$"
+    insertbefore: "^(.*)</shared-store></ha-policy>(.*)$"
+    line : "<slave><failover-on-shutdown>true</failover-on-shutdown><allow-failback>true</allow-failback></slave>"
+  when: '"slave" in amq_broker_name'
