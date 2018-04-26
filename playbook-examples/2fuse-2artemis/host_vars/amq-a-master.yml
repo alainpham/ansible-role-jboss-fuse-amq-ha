@@ -1,0 +1,10 @@
+---
+#temporary folder on target host to unzip the package
+temp_folder: "~/tmpa/"
+
+http_port: 8182
+
+#########The following variables shoud be redefined in host_vars
+amq_broker_name: amq-a-master
+amq_port: 61616
+amq_data_store_folder: ~/nfs/amq-a-store

@@ -1,5 +1,5 @@
 ---
-- name: Start Fuse container
+- name: Start Artemis Container
   shell: "nohup {{target_package_folder}}/instances/{{amq_broker_name}}/bin/artemis run >/dev/null 2>&1 &"
 
 - name: Check if server is up

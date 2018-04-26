@@ -1,0 +1,14 @@
+---
+- name: Check if server is up
+  uri:
+    url: "http://{{ansible_ssh_host}}:{{http_port}}"
+    method: GET
+    user: "{{ users.admin.username }}"
+    password: "{{ users.admin.password }}"
+    force_basic_auth: yes
+    status_code: 200
+  register: result
+
+- name: Print msg
+  debug: 
+    msg: "{{result.url}} -> Response code = {{result.status}}"

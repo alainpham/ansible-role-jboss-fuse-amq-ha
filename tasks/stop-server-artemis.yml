@@ -1,0 +1,4 @@
+---
+- name: Stop Artemis container
+  shell: "{{target_package_folder}}/instances/{{amq_broker_name}}/bin/artemis stop"
+  ignore_errors: yes

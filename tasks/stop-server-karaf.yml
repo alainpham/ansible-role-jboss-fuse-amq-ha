@@ -1,0 +1,4 @@
+---
+- name: Stop Fuse container
+  shell: "{{target_package_folder}}/bin/stop"
+  ignore_errors: yes

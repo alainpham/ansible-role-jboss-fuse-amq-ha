@@ -1,0 +1,15 @@
+[fuse]
+fuse-a ansible_ssh_host=std1 ansible_connection=ssh ansible_user=cloud-user
+fuse-b ansible_ssh_host=std2 ansible_connection=ssh ansible_user=cloud-user
+
+[amq:children]
+masters
+slaves
+
+[masters]
+amq-a-master ansible_ssh_host=std1 ansible_connection=ssh ansible_user=cloud-user
+amq-b-master ansible_ssh_host=std2 ansible_connection=ssh ansible_user=cloud-user
+
+[slaves]
+amq-a-slave ansible_ssh_host=std2 ansible_connection=ssh ansible_user=cloud-user
+amq-b-slave ansible_ssh_host=std1 ansible_connection=ssh ansible_user=cloud-user

@@ -1,0 +1,30 @@
+---
+#path to the Fuse or A-MQ package
+src_package_path: ./../distrib/
+
+#setup default users
+users:
+  admin:
+    username: admin
+    password: admin
+    roles:
+      - admin
+      - manager
+      - viewer
+      - Monitor
+      - Operator
+      - Maintainer
+      - Deployer
+      - Auditor
+      - Administrator
+      - SuperUser
+  deployer:
+    username: deployer
+    password: deployer
+    roles:
+      - Deployer
+  guest:
+    username: guest
+    password: guest
+    roles:
+      - viewer
