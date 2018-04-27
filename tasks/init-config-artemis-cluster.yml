@@ -154,3 +154,10 @@
     insertbefore: "^(.*)</shared-store></ha-policy>(.*)$"
     line : "<slave><failover-on-shutdown>true</failover-on-shutdown><allow-failback>true</allow-failback></slave>"
   when: '"slave" in amq_broker_name'
+
+- name: Set redistribution-delay on app.#
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: "^.*<address-setting match=\"app.#\">.*$"
+    insertbefore: "^(.*)</address-settings>(.*)$"
+    line : "<address-setting match=\"app.#\"><redistribution-delay>0</redistribution-delay></address-setting>"
