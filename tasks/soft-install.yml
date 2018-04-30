@@ -14,7 +14,8 @@
 
 - name: Unzip package in temp folder
   unarchive:
-    remote_src : "{{ temp_folder }}/{{artifact}}"
+    remote_src: yes
+    src: "{{ temp_folder }}/{{artifact}}"
     dest: "{{ temp_folder}}/extracted/"
   when: not_installed
 
