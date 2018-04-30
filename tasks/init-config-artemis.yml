@@ -20,3 +20,9 @@
   args:
     chdir: "{{ target_package_folder }}/bin"
     creates: ./../instances/{{ amq_broker_name }}
+
+- name: Remove strict cores
+  lineinfile: 
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/jolokia-access.xml"
+    regexp: ".*strict-checking.*"
+    state: absent
