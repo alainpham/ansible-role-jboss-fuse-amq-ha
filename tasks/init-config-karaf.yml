@@ -56,8 +56,8 @@
 - name: change mvn repo config - set remote maven repo
   lineinfile: 
     dest: "{{target_package_folder}}/etc/org.ops4j.pax.url.mvn.cfg"
-    regexp: "^(.*){{item}}}(.*)$"
-    line: "{{item}} \\"
+    regexp: "^(.*){{item}}(.*)$"
+    line: "{{item}}, \\"
     insertafter: ".*org.ops4j.pax.url.mvn.repositories.*"
   with_items: "{{ mvn_repos }}"
 
