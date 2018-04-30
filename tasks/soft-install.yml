@@ -3,13 +3,11 @@
   file: 
     path: "{{ temp_folder }}"
     state: directory
-  when: not_installed
 
 - name: Create temp folder
   file: 
     path: "{{ temp_folder}}/extracted/"
     state: directory
-  when: not_installed
 
 - name: Copy package
   copy: 
@@ -23,18 +21,12 @@
     remote_src: yes
     src: "{{ temp_folder }}/{{artifact}}"
     dest: "{{ temp_folder}}/extracted/"
-  when: not_installed
 
 - name: Get package original foldername
   shell: "ls -d {{temp_folder}}/extracted/*"
   register: dir_name
-  when: not_installed
  
 - name: Rename package folder
   shell: "mv {{dir_name.stdout_lines | first}} {{target_package_folder}}"
-  when: not_installed
-
-- name: Set facts to installed
-  set_fact: 
-    not_installed: false
-    installed: true
+  args:
+    creates: "{{target_package_folder}}"
