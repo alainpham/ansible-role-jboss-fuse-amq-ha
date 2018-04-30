@@ -1,10 +1,5 @@
 ---
 
-- name: Remove temp folder
-  file: 
-    path: "{{ temp_folder }}"
-    state: absent
-
 - name: Remove target package folder
   file: 
     path: "{{target_package_folder}}"
