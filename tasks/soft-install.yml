@@ -5,6 +5,12 @@
     state: directory
   when: not_installed
 
+- name: Create temp folder
+  file: 
+    path: "{{ temp_folder}}/extracted/"
+    state: directory
+  when: not_installed
+
 - name: Copy package
   copy: 
     src: "{{ src_package_path + artifact}}"
