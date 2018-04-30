@@ -21,6 +21,10 @@ target_package_folder: "~/fuse"
 #flag to set whether fuse-karaf server should be configured on the the host
 setup_karaf: yes
 
+mvn_repos: 
+  - http://hostmachine:8081/nexus/content/repositories/snapshots@snapshots@noreleases@update=always@id=deployed-snapshots
+  - http://hostmachine:8081/nexus/content/repositories/releases@update=always@id=deployed-releases
+
 karaf_ssh_port: 8101
 http_port: 8181
 rmi_server_port: 44444
@@ -32,6 +36,7 @@ karaf_client: '{{ target_package_folder }}/bin/client -r 3 -d 10 -u {{ users.adm
 karaf_features:
   - camel-amqp
   - activemq-camel
+  - camel-netty4-http
 
 ####################################
 #### A-MQ 6 variables

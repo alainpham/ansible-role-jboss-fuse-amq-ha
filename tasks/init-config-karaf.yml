@@ -38,3 +38,32 @@
     state: absent
   with_items: ["mq-fabric","camel-amq"]
   when: not setup_amq
+
+- name: change setenv for snapshot deployments - updateCheckManager
+  lineinfile: 
+    dest: "{{target_package_folder}}/bin/setenv"
+    regexp: "^(.*)EXTRA_JAVA_OPTS.*(.*)$"
+    line: "EXTRA_JAVA_OPTS=\"-Daether.updateCheckManager.sessionState=bypass\""
+    insertbefore: EOF
+
+- name: change setenv for snapshot deployments - export EXTRA_JAVA_OPTS
+  lineinfile: 
+    dest: "{{target_package_folder}}/bin/setenv"
+    regexp: "^(.*)export.*EXTRA_JAVA_OPTS(.*)$"
+    line: "export EXTRA_JAVA_OPTS"
+    insertbefore: EOF
+
+- name: change mvn repo config - set remote maven repo
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/org.ops4j.pax.url.mvn.cfg"
+    regexp: "^(.*){{item}}}(.*)$"
+    line: "{{item}} \\"
+    insertafter: ".*org.ops4j.pax.url.mvn.repositories.*"
+  with_items: "{{ mvn_repos }}"
+
+- name: change mvn repo config - global policy
+  lineinfile: 
+    dest: "{{target_package_folder}}/etc/org.ops4j.pax.url.mvn.cfg"
+    regexp: ".*org.ops4j.pax.url.mvn.globalUpdatePolicy.*=.*"
+    line: "org.ops4j.pax.url.mvn.globalUpdatePolicy = always"
+    insertafter: ".*org.ops4j.pax.url.mvn.globalChecksumPolicy.*"

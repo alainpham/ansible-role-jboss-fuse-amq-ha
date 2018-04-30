@@ -12,5 +12,5 @@
 
 - name: Remove nfs folder
   file: 
-    path: "{{nfs_mount_path}}/{{amq_broker_name}}"
+    path: "{{amq_data_store_folder}}"
     state: absent
