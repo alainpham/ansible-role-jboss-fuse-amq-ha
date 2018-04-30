@@ -1,23 +1,25 @@
 ---
-- name: Remove temp folder
-  file: 
-    path: "{{ temp_folder }}"
-    state: absent
-    
 - name: Create temp folder
   file: 
     path: "{{ temp_folder }}"
     state: directory
   when: not_installed
 
+- name: Copy package
+  copy: 
+    src: "{{ src_package_path + artifact}}"
+    dest: "{{ temp_folder }}/{{artifact}}"
+    force: no
+    mode: 0644
+
 - name: Unzip package in temp folder
   unarchive:
-    src: "{{ src_package_path + artifact}}"
-    dest: "{{ temp_folder}}"
+    remote_src : "{{ temp_folder }}/{{artifact}}"
+    dest: "{{ temp_folder}}/extracted/"
   when: not_installed
 
 - name: Get package original foldername
-  shell: "ls -d {{temp_folder}}/*"
+  shell: "ls -d {{temp_folder}}/extracted/*"
   register: dir_name
   when: not_installed
  
@@ -29,8 +31,3 @@
   set_fact: 
     not_installed: false
     installed: true
-
-- name: Remove temp folder
-  file: 
-    path: "{{ temp_folder }}"
-    state: absent
