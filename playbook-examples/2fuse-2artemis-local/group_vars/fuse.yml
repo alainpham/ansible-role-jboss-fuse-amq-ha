@@ -9,22 +9,15 @@
 #flag to say whether to install essential packages on the host such as unzip or java. You could assume the hosts are already installed.
 prepare_host: no
 
-#temporary folder on target host to unzip the package
-temp_folder: "~/tmpfuse/"
-
 #Fuse or A-MQ package to be installed with version
 artifact: jboss-fuse-karaf-6.3.0.redhat-329.zip
-
-#folder on target host 
-target_package_folder: "~/fuse"
 
 #flag to set whether fuse-karaf server should be configured on the the host
 setup_karaf: yes
 
-karaf_ssh_port: 8101
-http_port: 8181
-rmi_server_port: 44444
-rmi_registry_port: 1099
+mvn_repos: 
+  - http://hostmachine:8081/nexus/content/repositories/snapshots@snapshots@noreleases@update=always@id=deployed-snapshots
+  - http://hostmachine:8081/nexus/content/repositories/releases@update=always@id=deployed-releases
 
 karaf_client: '{{ target_package_folder }}/bin/client -r 3 -d 10 -u {{ users.admin.username }} -p {{ users.admin.password }}'
 
@@ -32,6 +25,7 @@ karaf_client: '{{ target_package_folder }}/bin/client -r 3 -d 10 -u {{ users.adm
 karaf_features:
   - camel-amqp
   - activemq-camel
+  - camel-netty4-http
 
 ####################################
 #### A-MQ 6 variables

@@ -1,5 +1,5 @@
 ---
-- name: Install essential packages
+- name: Install essential packages - Red Hat
   yum:
     name: "{{ item }}"
     state: present
@@ -7,6 +7,18 @@
   with_items:
     - unzip
     - java-1.8.0-openjdk
+  when: ansible_os_family == "RedHat" 
+
+- name: Install essential packages - Archlinux
+  pacman:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items:
+    - unzip
+    - jdk8-openjdk
+  when: ansible_os_family == "Archlinux" 
+
 
 - name: Create nfs folder
   file: 

@@ -11,7 +11,7 @@ prepare_host: yes
 
 #NFS folder for shared store setup when prepare host is done
 nfs_server: "hostmachine:/nfs/"
-nfs_mount_path: "/home/cloud-user/nfs/"
+nfs_mount_path: "/home/apham/nfs/"
 
 #Fuse or A-MQ package to be installed with version
 artifact: amq-broker-7.1.0-bin.zip

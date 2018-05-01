@@ -1,10 +1,10 @@
 ---
 #temporary folder on target host to unzip the package
-temp_folder: "~/tmpb/"
+temp_folder: "~/tmpbs/"
 
-http_port: 8183
+http_port: 4183
 
 #########The following variables shoud be redefined in host_vars
 amq_broker_name: amq-b-slave
-amq_port: 61617
+amq_port: 41617
 amq_data_store_folder: ~/nfs/amq-b-store

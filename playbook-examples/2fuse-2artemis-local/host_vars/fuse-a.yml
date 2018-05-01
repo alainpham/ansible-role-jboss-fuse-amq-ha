@@ -1,0 +1,12 @@
+---
+
+#temporary folder on target host to unzip the package
+temp_folder: "~/tmpfusea/"
+
+#folder on target host 
+target_package_folder: "~/fuse-a"
+
+karaf_ssh_port: 4101
+http_port: 4181
+rmi_server_port: 44444
+rmi_registry_port: 4099
