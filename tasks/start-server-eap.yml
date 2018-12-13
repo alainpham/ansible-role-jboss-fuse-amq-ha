@@ -1,0 +1,15 @@
+---
+- name: Start EAP Container
+  shell: "nohup {{target_package_folder}}/bin/standalone.sh -P {{target_package_folder}}/custom-config/config.properties>/dev/null 2>&1 &"
+  args:
+    chdir: "{{ target_package_folder }}"
+
+- name: Check if server is up
+  uri:
+    url: "http://{{ansible_ssh_host}}:{{http_port}}"
+    method: GET
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 2

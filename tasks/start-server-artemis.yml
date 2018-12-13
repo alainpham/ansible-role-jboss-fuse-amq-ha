@@ -1,6 +1,8 @@
 ---
 - name: Start Artemis Container
-  shell: "nohup {{target_package_folder}}/instances/{{amq_broker_name}}/bin/artemis run >/dev/null 2>&1 &"
+  shell: "nohup ./instances/{{amq_broker_name}}/bin/artemis run >/dev/null 2>&1 &"
+  args:
+    chdir: "{{ target_package_folder }}"
 
 - name: Check if server is up
   uri:

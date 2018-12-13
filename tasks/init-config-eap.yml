@@ -1,0 +1,56 @@
+---
+- name: Setting up eap config
+  debug:
+    msg: "Setting up eap config"
+
+- name: Create Default Users
+  shell: |
+    ./add-user.sh \
+      -u {{ users.admin.username }} \
+      -p {{ users.admin.password }}
+  args:
+    chdir: "{{ target_package_folder }}/bin"
+
+- name: Copy patchs
+  copy: 
+    src: "{{ src_package_path + item}}"
+    dest: "{{ temp_folder }}/{{item}}"
+    force: no
+    mode: 0644
+  with_items: "{{eap_patch_list}}"
+
+- name: Copy fuse patch
+  copy: 
+    src: "{{ src_package_path + eap_fuse_installer}}"
+    dest: "{{ temp_folder }}/{{eap_fuse_installer}}"
+    force: no
+    mode: 0644
+
+- name: Install list of patch
+  shell: |
+    ./bin/jboss-cli.sh "patch apply {{ temp_folder }}/{{item}}"
+  args:
+    chdir: "{{ target_package_folder }}"
+  with_items: "{{eap_patch_list}}"
+  ignore_errors: yes
+
+- name: Install fuse on eap
+  shell: |
+    java -jar {{ temp_folder }}/{{eap_fuse_installer}}
+  args:
+    chdir: "{{ target_package_folder }}"
+    creates: "{{ target_package_folder }}/fuse-version.txt"
+
+- name: Setup eap management address
+  lineinfile: 
+    dest: "{{target_package_folder}}/custom-config/config.properties"
+    regexp: "^{{item.key}}="
+    line: "{{item.key}}={{item.value}}"
+    create: "yes"
+  with_dict: "{{eap_props}}"
+
+- name: Remove strict cores
+  lineinfile: 
+    dest: "{{target_package_folder}}/standalone/configuration/jolokia-access.xml"
+    regexp: ".*strict-checking.*"
+    state: absent

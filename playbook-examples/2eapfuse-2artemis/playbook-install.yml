@@ -1,0 +1,15 @@
+---
+- name: Install Master AMQ instances
+  hosts: masters
+  roles:
+  - ansible-role-jboss-fuse-amq-ha
+
+- name: Install Slave AMQ instances
+  hosts: slaves
+  roles:
+  - ansible-role-jboss-fuse-amq-ha
+  
+- name: Install Fuse instances
+  hosts: fuse
+  roles:
+  - ansible-role-jboss-fuse-amq-ha

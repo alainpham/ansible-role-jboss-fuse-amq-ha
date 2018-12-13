@@ -1,0 +1,6 @@
+---
+- name: Setting up eap cluster config
+  debug:
+    msg: "Setting up eap cluster config"
+
+#wip

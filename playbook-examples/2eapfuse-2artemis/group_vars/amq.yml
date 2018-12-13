@@ -1,0 +1,36 @@
+---
+########################################################
+#This lists all used variables with their sane defaults
+
+####################################
+#### Generic variables
+####################################
+
+#flag to say whether to install essential packages on the host such as unzip or java. You could assume the hosts are already installed.
+prepare_host: yes
+
+#NFS folder for shared store setup when prepare host is done
+nfs_server: "hostmachine:/nfs/"
+nfs_mount_path: "/home/cloud-user/nfs/"
+
+#Fuse or A-MQ package to be installed with version
+artifact: amq-broker-7.2.2-bin.zip
+
+#folder on target host 
+target_package_folder: "~/broker"
+
+#flag to set whether fuse-karaf server should be configured on the the host
+setup_karaf: no
+
+####################################
+#### AMQ 6 & 7 variables
+####################################
+
+#flag to choose whether to setup A-MQ 6 brokers
+setup_amq: no
+
+#flag to choose whether to setup a network of AMQ brokers
+setup_amq_network: yes
+
+# AMQ 7 artemis specific vars
+setup_artemis : yes

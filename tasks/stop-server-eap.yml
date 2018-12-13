@@ -1,0 +1,4 @@
+---
+- name: Stop EAP container
+  shell: "{{target_package_folder}}/bin/jboss-cli.sh --connect 'shutdown'"
+  ignore_errors: yes

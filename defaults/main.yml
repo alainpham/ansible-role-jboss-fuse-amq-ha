@@ -19,7 +19,7 @@ src_package_path: ./../distrib/
 #temporary folder on target host to unzip the package
 temp_folder: "~/tmp/"
 
-#Fuse or A-MQ package to be installed with version
+#Fuse or EAP or A-MQ package to be installed with version
 artifact: jboss-fuse-karaf-6.3.0.redhat-329.zip
 
 #folder on target host 
@@ -96,3 +96,28 @@ networked_hosts:
 
 # AMQ 7 artemis specific vars
 setup_artemis : no
+
+
+####################################
+#### EAP variables
+####################################
+setup_eap : no
+setup_eap_cluster : no
+
+https_port : 8443
+eap_admin_port : 9990
+eap_admin_https_port : 9993
+
+eap_props :
+  jboss.bind.address.management: "0.0.0.0"
+  jboss.management.http.port: "{{eap_admin_port}}"
+  jboss.management.https.port: "{{eap_admin_https_port}}"
+  jboss.bind.address: "0.0.0.0"
+  jboss.http.port: "{{http_port}}"
+  jboss.https.port: "{{https_port}}"
+
+eap_patch_list: 
+  - jboss-eap-7.1.5-patch.zip
+  - jbeap-15941.zip
+
+eap_fuse_installer: fuse-eap-installer-7.1.0.fuse-710018-redhat-00001.jar
