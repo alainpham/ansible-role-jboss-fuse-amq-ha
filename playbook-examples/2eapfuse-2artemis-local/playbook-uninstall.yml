@@ -1,0 +1,10 @@
+---
+- name: Uninstall fuse
+  hosts:
+    - fuse
+    - masters
+  tasks:
+  - name: Uninstall server
+    include_role:
+      name: ansible-role-jboss-fuse-amq-ha
+      tasks_from: soft-uninstall
