@@ -52,3 +52,9 @@ setup_amq_network: no
 
 # AMQ 7 artemis specific vars
 setup_artemis : no
+
+####################################
+#### Prometheus variables
+####################################
+
+prom_config: prometheus-camel-config.yml

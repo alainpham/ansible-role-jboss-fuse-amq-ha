@@ -34,3 +34,9 @@ setup_amq_network: yes
 
 # AMQ 7 artemis specific vars
 setup_artemis : yes
+
+####################################
+#### Prometheus variables
+####################################
+
+prom_config: prometheus-artemis-config.yml

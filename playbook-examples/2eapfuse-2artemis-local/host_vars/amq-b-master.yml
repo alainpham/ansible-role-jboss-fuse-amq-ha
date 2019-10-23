@@ -8,3 +8,9 @@ http_port: 5182
 amq_broker_name: amq-b-master
 amq_port: 51616
 amq_data_store_folder: /home/workdrive/apps/EAP-FUSE/nfs/amq-b-store
+
+####################################
+#### Prometheus variables
+####################################
+
+prom_port: 6779

@@ -8,3 +8,9 @@ http_port: 5183
 amq_broker_name: amq-a-slave
 amq_port: 51617
 amq_data_store_folder: /home/workdrive/apps/EAP-FUSE/nfs/amq-a-store
+
+####################################
+#### Prometheus variables
+####################################
+
+prom_port: 5779
