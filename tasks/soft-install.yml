@@ -30,3 +30,22 @@
   shell: "mv {{dir_name.stdout_lines | first}} {{target_package_folder}}"
   args:
     creates: "{{target_package_folder}}"
+
+- name: Create JMX Exporter folder
+  file: 
+    path: "{{ target_package_folder }}/jmx_exporter/"
+    state: directory
+
+- name: Add JMX Exporter
+  copy: 
+    src: "{{ src_package_path + jmx_exporter_jar}}"
+    dest: "{{ target_package_folder }}/jmx_exporter/{{jmx_exporter_jar}}"
+    force: no
+    mode: 0644
+
+- name: Add JMX Exporter Config
+  copy: 
+    src: "{{ src_package_path + prom_config}}"
+    dest: "{{ target_package_folder }}/jmx_exporter/{{prom_config}}"
+    force: no
+    mode: 0644

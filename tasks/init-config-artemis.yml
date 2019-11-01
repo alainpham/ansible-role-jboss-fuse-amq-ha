@@ -26,3 +26,24 @@
     dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/jolokia-access.xml"
     regexp: ".*strict-checking.*"
     state: absent
+
+- name: Configure JMX exporter for Artemis
+  lineinfile:
+    dest: "{{ target_package_folder }}/instances/{{ amq_broker_name }}/bin/artemis"
+    regexp: ".*PREPEND_JAVA_OPTS=.*"
+    insertbefore: ".*exec.*JAVACMD.*"
+    line: "if [ \"$1\" != \"stop\" ] ; then  PREPEND_JAVA_OPTS=\"-Dcom.sun.management.jmxremote=true -javaagent:$ARTEMIS_HOME/jmx_exporter/{{jmx_exporter_jar}}={{prom_port}}:$ARTEMIS_HOME/jmx_exporter/{{prom_config}}\"  ; fi"
+
+- name: Configure JMX exporter exec for Artemis
+  lineinfile:
+    dest: "{{ target_package_folder }}/instances/{{ amq_broker_name }}/bin/artemis"
+    regexp: ".*$PREPEND_JAVA_OPTS \\.*"
+    insertafter: ".*JAVA_ARGS.*\\.*"
+    line: "$PREPEND_JAVA_OPTS \\"
+
+- name: Acceptor with any/multicast prefix
+  lineinfile:
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: '(^.*<acceptor name="artemis">tcp://0.0.0.0:.*\?)(tcpSendBufferSize.*$)'
+    line : '\1anycastPrefix=jms.queue.;multicastPrefix=jms.topic.;\2'
+    backrefs: yes

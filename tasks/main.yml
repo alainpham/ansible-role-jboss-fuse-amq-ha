@@ -29,6 +29,9 @@
 - include: "start-server-eap.yml"
   when: setup_eap
 
+- include: "init-config-eap-resources.yml"
+  when: setup_eap
+
 # Artemis Based components
 - include: "init-config-artemis.yml"
   when: setup_artemis

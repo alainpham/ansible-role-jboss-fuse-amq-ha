@@ -19,6 +19,14 @@
     mode: 0644
   with_items: "{{eap_patch_list}}"
 
+- name: Copy patchs to be applied after fuse
+  copy: 
+    src: "{{ src_package_path + item}}"
+    dest: "{{ temp_folder }}/{{item}}"
+    force: no
+    mode: 0644
+  with_items: "{{eap_patch_list_after_fuse}}"
+
 - name: Copy fuse patch
   copy: 
     src: "{{ src_package_path + eap_fuse_installer}}"
@@ -41,6 +49,14 @@
     chdir: "{{ target_package_folder }}"
     creates: "{{ target_package_folder }}/fuse-version.txt"
 
+- name: Install list of patch after fuse
+  shell: |
+    ./bin/jboss-cli.sh "patch apply {{ temp_folder }}/{{item}}"
+  args:
+    chdir: "{{ target_package_folder }}"
+  with_items: "{{eap_patch_list_after_fuse}}"
+  ignore_errors: yes
+
 - name: Setup eap management address
   lineinfile: 
     dest: "{{target_package_folder}}/custom-config/config.properties"
@@ -54,3 +70,31 @@
     dest: "{{target_package_folder}}/standalone/configuration/jolokia-access.xml"
     regexp: ".*strict-checking.*"
     state: absent
+
+# Add JMX exporter config
+
+- name: Configure JMX Exporter JBOSS_MODULES_SYSTEM_PKGS
+  lineinfile: 
+    dest: "{{target_package_folder}}/bin/standalone.conf"
+    regexp: "^.*JBOSS_MODULES_SYSTEM_PKGS=.*$"
+    line: "JBOSS_MODULES_SYSTEM_PKGS=\"org.jboss.byteman,org.jboss.logmanager\""
+
+- name: Get version of jboss-logmanager-jar for JMX Exporter
+  find:
+    paths: "{{target_package_folder}}/modules/system/layers/base/org/jboss/logmanager/main/"
+    patterns: "jboss-logmanager*"
+  register: jboss_logmanager_jar
+
+- name: Get version of wildfly-common-jar for JMX Exporter
+  find:
+    paths: "{{target_package_folder}}/modules/system/layers/base/org/wildfly/common/main/"
+    patterns: "wildfly-common-*"
+  register: wildfly_common_jar
+
+- name: Configure JMX Exporter PREPEND_JAVA_OPTS
+  lineinfile: 
+    dest: "{{target_package_folder}}/bin/standalone.conf"
+    regexp: "^.*PREPEND_JAVA_OPTS=.*$"
+    line: "PREPEND_JAVA_OPTS=\"-javaagent:$JBOSS_HOME/jmx_exporter/{{jmx_exporter_jar}}={{prom_port}}:$JBOSS_HOME/jmx_exporter/{{prom_config}} -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Xbootclasspath/p:{{jboss_logmanager_jar.files[0].path}} -Xbootclasspath/p:{{wildfly_common_jar.files[0].path}}\""
+
+

@@ -118,6 +118,16 @@ eap_props :
 
 eap_patch_list: 
   - jboss-eap-7.1.5-patch.zip
+
+eap_patch_list_after_fuse:
   - jbeap-15941.zip
 
 eap_fuse_installer: fuse-eap-installer-7.1.0.fuse-710018-redhat-00001.jar
+
+####################################
+#### Prometheus variables
+####################################
+
+jmx_exporter_jar: jmx_prometheus_javaagent-0.12.0.jar
+prom_config: prometheus-camel-config.yml
+prom_port: 9779

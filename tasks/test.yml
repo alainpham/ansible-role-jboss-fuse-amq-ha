@@ -1,0 +1,30 @@
+- name: Create the list
+  set_fact:
+    connector: "messaging-remote-{{ hostvars[item]['amq_broker_name'] }}-connector"
+  with_inventory_hostnames:
+    - masters
+    - slaves
+  register: connectors_list_result
+
+- name: Extract items and turn into a list
+  set_fact:
+      connectors_list: "{{connectors_list_result.results | map(attribute='ansible_facts.connector') | list}}"
+
+- name: Items to string comma separated
+  set_fact:
+      connectors_list_string: "{{connectors_list | join(',')}}"
+
+
+- name: Reload wildfly for Artemis extension
+  shell: |
+    ./bin/jboss-cli.sh -c --controller=remote+http://{{ansible_ssh_host}}:{{eap_admin_port}} "reload"
+  args:
+    chdir: "{{ target_package_folder }}"
+  ignore_errors: no
+
+- name: Install broker config connectors
+  shell: |
+    ./bin/jboss-cli.sh -c --controller=remote+http://{{ansible_ssh_host}}:{{eap_admin_port}} "/subsystem=messaging-activemq/pooled-connection-factory=jms-remote:add(entries=["java:/RemoteJmsConnectionFactory"],connectors=[{{connectors_list_string}}],ha=true)"
+  args:
+    chdir: "{{ target_package_folder }}"
+  ignore_errors: no

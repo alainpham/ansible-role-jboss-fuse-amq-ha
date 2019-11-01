@@ -11,5 +11,5 @@ amq-a-master ansible_ssh_host=localhost ansible_connection=local
 amq-b-master ansible_ssh_host=localhost ansible_connection=local 
 
 [slaves]
-amq-a-slave ansible_ssh_host=localhost ansible_connection=ssh 
+amq-a-slave ansible_ssh_host=localhost ansible_connection=local 
 amq-b-slave ansible_ssh_host=localhost ansible_connection=local 
