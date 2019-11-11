@@ -1,0 +1,16 @@
+---
+- name: Create Queues
+  lineinfile:
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: '.*<address name=\"{{item}}\".*'
+    line : '<address name="{{item}}"><anycast><queue name="{{item}}"/></anycast></address>'
+    insertbefore: '.*</addresses>.*'
+  with_items: '{{ queues }}'
+
+- name: Create Topics
+  lineinfile:
+    dest: "{{target_package_folder}}/instances/{{ amq_broker_name }}/etc/broker.xml"
+    regexp: '.*<address name=\"{{item}}\".*'
+    line : '<address name="{{item}}"><multicast/></address>'
+    insertbefore: '.*</addresses>.*'
+  with_items: '{{ topics }}'

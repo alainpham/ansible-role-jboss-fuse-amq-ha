@@ -58,9 +58,16 @@
     chdir: "{{ target_package_folder }}"
   ignore_errors: no
 
-- name: Install broker config connectors
+#- name: Install broker Pooled JCA Connection 
+#  shell: |
+#    ./bin/jboss-cli.sh -c --controller=remote+http://{{ansible_ssh_host}}:{{eap_admin_port}} "/subsystem=messaging-activemq/pooled-connection-factory=jms-remote:add(entries=["java:/XaRemoteJmsConnectionFactory"],connectors=[{{connectors_list_string}}],ha=true,user={{ users.admin.username }},password={{ users.admin.password }},client-id={{inventory_hostname}},rebalance-connections=true,allow-local-transactions=true,statistics-enabled=true)"
+#  args:
+#    chdir: "{{ target_package_folder }}"
+#  ignore_errors: no
+
+- name: Install broker Non JCA Connection factory 
   shell: |
-    ./bin/jboss-cli.sh -c --controller=remote+http://{{ansible_ssh_host}}:{{eap_admin_port}} "/subsystem=messaging-activemq/pooled-connection-factory=jms-remote:add(entries=["java:/RemoteJmsConnectionFactory"],connectors=[{{connectors_list_string}}],ha=true,user={{ users.admin.username }},password={{ users.admin.password }},client-id={{inventory_hostname}},rebalance-connections=true,allow-local-transactions=true)"
+    ./bin/jboss-cli.sh -c --controller=remote+http://{{ansible_ssh_host}}:{{eap_admin_port}} "/subsystem=messaging-activemq/connection-factory=simple-jms-remote:add(entries=["java:/JmsConnectionFactory"],connectors=[{{connectors_list_string}}],ha=true)"
   args:
     chdir: "{{ target_package_folder }}"
   ignore_errors: no

@@ -97,6 +97,11 @@ networked_hosts:
 # AMQ 7 artemis specific vars
 setup_artemis : no
 
+queues:
+  - app.queue
+
+topics:
+  - app.topic
 
 ####################################
 #### EAP variables

@@ -14,17 +14,9 @@
   set_fact:
       connectors_list_string: "{{connectors_list | join(',')}}"
 
-
-- name: Reload wildfly for Artemis extension
+- name: Install broker Connection factory non JCA
   shell: |
-    ./bin/jboss-cli.sh -c --controller=remote+http://{{ansible_ssh_host}}:{{eap_admin_port}} "reload"
-  args:
-    chdir: "{{ target_package_folder }}"
-  ignore_errors: no
-
-- name: Install broker config connectors
-  shell: |
-    ./bin/jboss-cli.sh -c --controller=remote+http://{{ansible_ssh_host}}:{{eap_admin_port}} "/subsystem=messaging-activemq/pooled-connection-factory=jms-remote:add(entries=["java:/RemoteJmsConnectionFactory"],connectors=[{{connectors_list_string}}],ha=true)"
+    ./bin/jboss-cli.sh -c --controller=remote+http://{{ansible_ssh_host}}:{{eap_admin_port}} "/subsystem=messaging-activemq/connection-factory=simple-jms-remote:add(entries=["java:/JmsConnectionFactory"],connectors=[{{connectors_list_string}}])"
   args:
     chdir: "{{ target_package_folder }}"
   ignore_errors: no

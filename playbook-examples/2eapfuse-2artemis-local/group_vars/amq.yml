@@ -35,6 +35,13 @@ setup_amq_network: yes
 # AMQ 7 artemis specific vars
 setup_artemis : yes
 
+queues:
+  - app.queue
+  - app.sync
+
+topics:
+  - app.topic
+
 ####################################
 #### Prometheus variables
 ####################################

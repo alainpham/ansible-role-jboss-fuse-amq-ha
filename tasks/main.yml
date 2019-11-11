@@ -36,6 +36,9 @@
 - include: "init-config-artemis.yml"
   when: setup_artemis
 
+- include: "init-config-artemis-resources.yml"
+  when: setup_artemis
+
 - include: "init-config-artemis-cluster.yml"
   when: setup_artemis and setup_amq_network
   

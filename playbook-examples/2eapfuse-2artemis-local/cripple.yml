@@ -1,6 +1,6 @@
 - name: Stop Artemis instance
   hosts:
-    - "{{ h | default('amq') }}"
+    - "{{ h | default('amqb') }}"
   tasks:
   - name: stop-servers
     include_role:
