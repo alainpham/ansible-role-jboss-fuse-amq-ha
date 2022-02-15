@@ -1,0 +1,16 @@
+---
+#temporary folder on target host to unzip the package
+temp_folder: "~/tmpas/"
+
+http_port: 5183
+
+#########The following variables shoud be redefined in host_vars
+amq_broker_name: amq-a-slave
+amq_port: 51617
+amq_data_store_folder: /home/workdrive/apps/EAP-FUSE/nfs/amq-a-store
+
+####################################
+#### Prometheus variables
+####################################
+
+prom_port: 5779

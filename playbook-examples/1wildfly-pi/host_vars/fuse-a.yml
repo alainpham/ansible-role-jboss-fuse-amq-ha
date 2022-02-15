@@ -1,0 +1,18 @@
+---
+
+#temporary folder on target host to unzip the package
+temp_folder: "~/tmpfusea/"
+
+#folder on target host 
+target_package_folder: "/home/workdrive/apps/EAP-FUSE/fuse-a"
+
+http_port: 8080
+https_port: 8443
+
+eap_admin_port : 9990
+
+####################################
+#### Prometheus variables
+####################################
+
+prom_port: 8779

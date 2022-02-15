@@ -1,0 +1,9 @@
+- name: Stop Artemis instance
+  hosts:
+    - "{{ h | default('amqb') }}"
+  tasks:
+  - name: stop-servers
+    include_role:
+      name: ansible-role-jboss-fuse-amq-ha
+      tasks_from: stop-server-artemis
+

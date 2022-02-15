@@ -1,0 +1,9 @@
+---
+- name: test
+  hosts:
+    - fuse
+  tasks:
+  - name: Test
+    include_role:
+      name: ansible-role-jboss-fuse-amq-ha
+      tasks_from: test
